@@ -326,35 +326,6 @@ export default function LoginPage({ onLogin }) {
           </button>
         </form>
 
-        {isLogin && (
-          <div className="test-accounts">
-            <p className="test-title">Demo Accounts:</p>
-            <div className="test-buttons">
-              <button 
-                onClick={() => quickLogin('admin@school.com', 'admin123')}
-                className="test-btn admin"
-                disabled={loading}
-              >
-                <User size={14} /> Admin
-              </button>
-              <button 
-                onClick={() => quickLogin('student@school.com', 'student123')}
-                className="test-btn user"
-                disabled={loading}
-              >
-                <User size={14} /> Student
-              </button>
-              <button 
-                onClick={() => quickLogin('teacher@school.com', 'teacher123')}
-                className="test-btn teacher"
-                disabled={loading}
-              >
-                <User size={14} /> Teacher
-              </button>
-            </div>
-          </div>
-        )}
-
         <div className="login-footer">
           <p>
             {isLogin ? "Don't have an account? " : "Already have an account? "}
