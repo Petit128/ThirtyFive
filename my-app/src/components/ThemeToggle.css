@@ -1,0 +1,25 @@
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.navbar.dark .theme-toggle {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar.light .theme-toggle {
+  color: #333;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+}

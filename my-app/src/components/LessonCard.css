@@ -1,0 +1,98 @@
+.lesson-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.lesson-card.dark {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lesson-card.light {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.lesson-image {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.lesson-emoji {
+  font-size: 3rem;
+}
+
+.completed-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #4caf50;
+}
+
+.lesson-content {
+  padding: 15px;
+}
+
+.lesson-content h3 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.lesson-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.lesson-class, .lesson-subject {
+  padding: 3px 8px;
+  border-radius: 12px;
+  background: rgba(100, 108, 255, 0.1);
+}
+
+.lesson-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lesson-duration {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9rem;
+}
+
+.play-lesson-btn {
+  background: #646cff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-lesson-btn:hover {
+  background: #535bf2;
+  transform: scale(1.05);
+}
