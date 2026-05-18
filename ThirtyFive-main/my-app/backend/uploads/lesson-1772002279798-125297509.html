@@ -1,0 +1,241 @@
+
+<div class="container">
+    <h1>Full Superellipse Corner Approximation (s ≥ 0)</h1>
+    <p>Adjust the 's' value (superellipse value, log₂(k)) to see how the two symmetrical cubic Bezier curves approximate different convex corner shapes.</p>
+    
+    <label for="sValue">Superellipse 's' Value (k = 2^s):</label>
+    <input type="range" id="sValue" min="0" max="8" step="0.01" value="1">
+    <span id="sDisplay">s = 1.00</span>
+    <p class="k-text">Corresponding k: <span id="kDisplay"></span></p>
+    
+    <canvas id="superellipseCanvas" width="500" height="500"></canvas>
+    
+    <div class="legend">
+        <h2>Bezier Points Visualization (Scaled)</h2>
+        <p><span class="point-start-end">●</span> P0 (Start Point: (0, 1)) and P2 (End Point: (1, 0))</p>
+        <p><span class="point-diagonal">●</span> P1 (Diagonal Half-Corner: (0.5¹ᐟᵏ, 0.5¹ᐟᵏ))</p>
+        <p><span class="point-control1">●</span> C1 (Curve 1 Control 1: (a, 1)) and C4 (Curve 2 Control 2: (1, a))</p>
+        <p><span class="point-control2">●</span> C2 (Curve 1 Control 2) and C3 (Curve 2 Control 1) (These are symmetrical control points diagonal to P1)</p>
+        <p class="formula-text">Current a: <span id="aDisplay"></span> | Current b: <span id="bDisplay"></span></p>
+    </div>
+</div>
+
+
+<script>
+    // Constants computed using symbolic regression
+const P = {
+    p0: 1.2430920942724248,
+    p1: 2.010479023614843,
+    p2: 0.32922901179443753,
+    p3: 0.2823023142212073, 
+    p4: 1.3473704261055421,
+    p5: 2.9149468637949814,
+    p6: 0.9106507102917086
+};
+
+// Canvas and control setup
+const canvas = document.getElementById('superellipseCanvas');
+const ctx = canvas.getContext('2d');
+const sSlider = document.getElementById('sValue');
+const sDisplay = document.getElementById('sDisplay');
+const kDisplay = document.getElementById('kDisplay');
+const aDisplay = document.getElementById('aDisplay');
+const bDisplay = document.getElementById('bDisplay');
+
+const SCALE = 400; // Scaling factor for visualization
+const OFFSET = 50; // Canvas padding
+
+/**
+ * Calculates the 'k', 'a', and 'b' parameters, and the seven Bezier curve points 
+ * (P0, C1, C2, P1, C3, C4, P2) for a full convex superellipse corner.
+ * @param {number} s The superellipse s value (log2(k)). Must be s >= 0 (k >= 1).
+ * @returns {object} The calculated Bezier points and the values a, b, and k.
+ */
+function calculateBezierPoints(s) {
+    // Ensure s >= 0 (k >= 1 for convex shapes)
+    if (s < 0) s = 0; 
+    
+    // Calculate k: k = 2^s
+    const k = Math.pow(2, s);
+
+    // Destructure constants
+    const { p0, p1, p2, p3, p4, p5, p6 } = P;
+
+    // 1. Compute intermediate values based on s
+    const slope = p0 + (p6 - p0) * 0.5 * (1 + Math.tanh(p5 * (s - p1)));
+    const base = 1 / (1 + Math.exp(slope * p1));
+    const logistic = 1 / (1 + Math.exp(slope * (p1 - s)));
+
+    // 2. Compute a and b
+    const a = (logistic - base) / (1 - base);
+    const b = p2 * Math.exp(-p3 * Math.pow(s, p4)); 
+
+    // 3. Compute end point coordinate (0.5^(1/k))
+    const X_end = Math.pow(0.5, 1/k);
+    const Y_end = X_end; // P1 is the diagonal point
+
+    // 4. Define the seven unique points
+    const points = {
+        // Curve 1 (P0 to P1)
+        P0: { x: 0, y: 1 },                 
+        C1: { x: a, y: 1 },                 
+        C2: { x: X_end - b, y: Y_end + b }, 
+        P1: { x: X_end, y: Y_end },         
+        
+        // Curve 2 (P1 to P2) - Symmetrical reflection of Curve 1 points
+        C3: { x: Y_end + b, y: X_end - b }, // Reflected C2 (x, y swapped)
+        C4: { x: 1, y: a },                 // Reflected C1 (x, y swapped)
+        P2: { x: 1, y: 0 }                  // Reflected P0 (x, y swapped)
+    };
+    
+    return { points, a, b, k };
+}
+
+/**
+ * Draws the two-segment Bezier curve and its control points on the canvas.
+ * @param {object} params The parameters object containing points, a, b, and k.
+ */
+function drawCurve({ points, a, b, k }) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // --- Utility function to translate unit points (0 to 1) to canvas coordinates ---
+    const toCanvas = (p) => ({
+        // X: scale right (x increases)
+        x: p.x * SCALE + OFFSET,
+        // Y: scale down (y increases downwards). Invert Y to draw P0=(0,1) at the top.
+        y: (1 - p.y) * SCALE + OFFSET 
+    });
+
+    const P0_c = toCanvas(points.P0);
+    const C1_c = toCanvas(points.C1);
+    const C2_c = toCanvas(points.C2);
+    const P1_c = toCanvas(points.P1);
+    const C3_c = toCanvas(points.C3);
+    const C4_c = toCanvas(points.C4);
+    const P2_c = toCanvas(points.P2);
+
+    // Update displays for k, a and b
+    kDisplay.textContent = k.toFixed(2);
+    aDisplay.textContent = a.toFixed(6);
+    bDisplay.textContent = b.toFixed(6);
+
+    // 1. Draw the Bezier Curve (Two Segments)
+    ctx.beginPath();
+    // Segment 1: P0 -> C1 -> C2 -> P1
+    ctx.moveTo(P0_c.x, P0_c.y);
+    ctx.bezierCurveTo(C1_c.x, C1_c.y, C2_c.x, C2_c.y, P1_c.x, P1_c.y);
+    // Segment 2: P1 -> C3 -> C4 -> P2
+    ctx.bezierCurveTo(C3_c.x, C3_c.y, C4_c.x, C4_c.y, P2_c.x, P2_c.y);
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    // 2. Draw Control Lines (Cubic Bezier cages)
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    // Control cage for curve 1
+    ctx.moveTo(P0_c.x, P0_c.y);
+    ctx.lineTo(C1_c.x, C1_c.y);
+    ctx.lineTo(C2_c.x, C2_c.y);
+    ctx.lineTo(P1_c.x, P1_c.y);
+    // Control cage for curve 2
+    ctx.lineTo(C3_c.x, C3_c.y);
+    ctx.lineTo(C4_c.x, C4_c.y);
+    ctx.lineTo(P2_c.x, P2_c.y);
+    ctx.stroke();
+
+    // 3. Draw Points
+    const drawPoint = (p, color) => {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, 2 * Math.PI);
+        ctx.fill();
+    };
+
+    drawPoint(P0_c, '#007bff'); // P0 (Start)
+    drawPoint(P2_c, '#007bff'); // P2 (End)
+    drawPoint(P1_c, '#28a745'); // P1 (Diagonal)
+    drawPoint(C1_c, '#ffc107'); // C1 
+    drawPoint(C4_c, '#ffc107'); // C4 (Symmetrical to C1)
+    drawPoint(C2_c, '#dc3545'); // C2
+    drawPoint(C3_c, '#dc3545'); // C3 (Symmetrical to C2)
+
+    // 4. Draw coordinate axes for reference (1x1 unit space)
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([2, 2]);
+    
+    // Y=1 axis (top of the unit square)
+    ctx.beginPath();
+    ctx.moveTo(OFFSET, OFFSET);
+    ctx.lineTo(OFFSET + SCALE, OFFSET);
+    ctx.stroke();
+    
+    // X=0 axis (left of the unit square)
+    ctx.beginPath();
+    ctx.moveTo(OFFSET, OFFSET);
+    ctx.lineTo(OFFSET, OFFSET + SCALE);
+    ctx.stroke();
+    
+    ctx.setLineDash([]);
+}
+
+function updateVisualization() {
+    const s = parseFloat(sSlider.value);
+    sDisplay.textContent = `s = ${s.toFixed(2)}`;
+    
+    const calculationResult = calculateBezierPoints(s);
+    drawCurve(calculationResult);
+}
+
+// Initial draw and event listener
+sSlider.addEventListener('input', updateVisualization);
+updateVisualization();
+</script>
+
+<style>
+    body {
+    font-family: sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 550px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#superellipseCanvas {
+    display: block;
+    border: 1px solid #ccc;
+    margin-top: 15px;
+}
+
+#kValue {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.legend {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px dashed #ccc;
+}
+
+.point-p0 { color: #007bff; } /* Blue */
+.point-p1 { color: #28a745; } /* Green */
+.point-c1 { color: #ffc107; } /* Yellow */
+.point-c2 { color: #dc3545; } /* Red */
+
+.legend span {
+    font-size: 1.5em;
+    line-height: 0;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+</style>

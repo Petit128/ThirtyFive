@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "reports": {
+    "users": {
+      "total": "4"
+    },
+    "lessons": {
+      "total": "1"
+    },
+    "quizzes": {
+      "total": "0"
+    },
+    "generated_at": "2026-05-13T09:18:03.733Z"
+  }
+}

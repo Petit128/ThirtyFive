@@ -1,0 +1,177 @@
+.create-quiz {
+  min-height: calc(100vh - 80px);
+  padding: 24px;
+}
+
+.create-quiz.dark {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+}
+
+.create-quiz.light {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #1e293b;
+}
+
+.create-quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quiz-form {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.questions-list {
+  margin: 20px 0;
+}
+
+.question-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.question-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.q-num {
+  font-weight: bold;
+  color: #646cff;
+}
+
+.remove-q {
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.add-question-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.options-group {
+  margin: 16px 0;
+}
+
+.option-input {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.option-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+}
+
+.set-correct {
+  padding: 10px 16px;
+  background: rgba(100, 108, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.set-correct.active {
+  background: #10b981;
+  color: white;
+}
+
+.btn-add-question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: rgba(100, 108, 255, 0.2);
+  border: 2px dashed #646cff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+}
+
+.btn-add-question:hover {
+  background: rgba(100, 108, 255, 0.3);
+}
+
+/* Ajouts à CreateQuiz.css */
+.exam-type-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.type-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid #646cff;
+  background: transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.type-btn.active {
+  background: #646cff;
+  color: white;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.help-text {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-top: 5px;
+}
+
+.file-dropzone input {
+  display: none;
+}
+
+.file-dropzone label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 30px;
+  border: 2px dashed #646cff;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.file-dropzone label:hover {
+  background: rgba(100, 108, 255, 0.1);
+}

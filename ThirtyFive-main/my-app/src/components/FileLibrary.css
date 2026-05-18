@@ -1,0 +1,512 @@
+/* src/components/FileLibrary.css - Version refondue */
+.file-library {
+  padding: 0;
+}
+
+.file-library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.file-library-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-top: 4px;
+  color: var(--text-secondary);
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.file-stats-summary {
+  display: flex;
+  gap: 16px;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border-radius: 40px;
+  border: 1px solid var(--border-light);
+}
+
+.file-stats-summary span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* ========== TABS ========== */
+.library-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 4px;
+  border-radius: 60px;
+  background: rgba(100, 108, 255, 0.05);
+}
+
+.tab {
+  padding: 8px 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.tab:hover:not(.active) {
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+/* ========== FILTERS ========== */
+.file-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  border-radius: 40px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.search-box input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-box button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 4px;
+}
+
+.type-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.type-filter {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 30px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.type-filter.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.type-filter:hover:not(.active) {
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+.refresh-btn {
+  padding: 8px;
+  border: none;
+  border-radius: 40px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.refresh-btn:hover {
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+/* ========== FILES GRID ========== */
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.file-card {
+  display: ruby;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.file-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.file-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+.file-info {
+  flex: 1;
+}
+
+.file-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.file-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.file-type {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: rgba(100, 108, 255, 0.1);
+  border-radius: 30px;
+  color: var(--primary);
+}
+
+.file-size {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.file-details {
+  display: flex;
+  gap: 12px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.file-details span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.download-btn, .delete-btn {
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.download-btn:hover {
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+/* ========== STATUS BADGE ========== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+.status-badge.approved {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.status-badge.pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+}
+
+.status-badge.rejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger);
+}
+
+/* ========== PENDING SECTION ========== */
+.pending-section {
+  margin-bottom: 32px;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.pending-section h3 {
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pending-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pending-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: rgba(100, 108, 255, 0.03);
+  border: 1px solid var(--border-light);
+}
+
+.pending-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.file-icon-small {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+.pending-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.approve-btn, .reject-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.approve-btn {
+  background: var(--success);
+  color: white;
+}
+
+.reject-btn {
+  background: var(--danger);
+  color: white;
+}
+
+/* ========== EMPTY STATE ========== */
+.empty-state, .empty-files {
+  text-align: center;
+  padding: 60px 20px;
+  opacity: 0.7;
+  color: var(--text-secondary);
+}
+
+.empty-state svg, .empty-files svg {
+  opacity: 0.3;
+  margin-bottom: 16px;
+}
+
+/* ========== MODAL UPLOAD ========== */
+.upload-modal {
+  max-width: 500px;
+}
+
+.upload-zone {
+  margin: 20px 0;
+}
+
+.upload-zone input {
+  display: none;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px;
+  border: 2px dashed var(--border-medium);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--bg-secondary);
+}
+
+.upload-label:hover {
+  background: rgba(100, 108, 255, 0.05);
+  border-color: var(--primary);
+}
+
+.upload-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(100, 108, 255, 0.1);
+  border-radius: 10px;
+  margin: 16px 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.file-info-text {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.preview-btn {
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.preview-btn:hover {
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .file-library-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .files-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .type-filters {
+    justify-content: center;
+  }
+  
+  .file-filters {
+    flex-direction: column;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
+  
+  .pending-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .pending-info {
+    flex-direction: column;
+  }
+}
+

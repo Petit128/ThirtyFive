@@ -1,0 +1,893 @@
+/* src/pages/ProfessorDashboard.css */
+.professor-dashboard {
+  padding: 24px;
+  min-height: 100vh;
+  transition: all 0.3s ease;
+}
+
+.professor-dashboard.dark {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #fff;
+}
+
+.professor-dashboard.light {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #1e293b;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  border-radius: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.professor-dashboard.dark .dashboard-header {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.professor-dashboard.light .dashboard-header {
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-primary, .btn-secondary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: rgba(100, 108, 255, 0.1);
+  color: inherit;
+  border: 1px solid rgba(100, 108, 255, 0.3);
+}
+
+.btn-secondary:hover {
+  background: rgba(100, 108, 255, 0.2);
+}
+
+/* Tabs */
+.dashboard-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(100, 108, 255, 0.2);
+}
+
+.dashboard-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  font-size: 1rem;
+}
+
+.professor-dashboard.dark .dashboard-tabs button {
+  color: #fff;
+}
+
+.professor-dashboard.light .dashboard-tabs button {
+  color: #475569;
+}
+
+.dashboard-tabs button.active {
+  background: #646cff;
+  color: white;
+}
+
+/* Tab Panel */
+.tab-panel {
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.professor-dashboard.dark .tab-panel {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.professor-dashboard.light .tab-panel {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.panel-header h2 {
+  font-size: 1.4rem;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  min-width: 250px;
+}
+
+.professor-dashboard.dark .search-box {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.professor-dashboard.light .search-box {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-box input {
+  background: none;
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 1rem;
+}
+
+.professor-dashboard.dark .search-box input {
+  color: white;
+}
+
+/* Students Grid */
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.student-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.professor-dashboard.dark .student-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.professor-dashboard.light .student-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.student-card:hover {
+  transform: translateY(-2px);
+}
+
+.student-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #646cff;
+}
+
+.student-info {
+  flex: 1;
+}
+
+.student-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.student-email {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.student-class {
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.student-grade {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.student-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.student-actions button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.btn-view {
+  background: #646cff;
+  color: white;
+}
+
+.btn-grade {
+  background: #10b981;
+  color: white;
+}
+
+/* Analytics Grid */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.professor-dashboard.dark .stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.professor-dashboard.light .stat-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-card h3 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Analytics Sections */
+.analytics-section {
+  margin-top: 32px;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.professor-dashboard.dark .analytics-section {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.professor-dashboard.light .analytics-section {
+  background: white;
+}
+
+.analytics-section h3 {
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.professor-dashboard.dark .ranking-item {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ranking-item:hover {
+  background: rgba(100, 108, 255, 0.1);
+}
+
+.rank {
+  font-weight: bold;
+  width: 50px;
+  font-size: 1.1rem;
+}
+
+.name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.class {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+.grade {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Subject Performance */
+.subject-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subject-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.subject-name {
+  width: 120px;
+  font-weight: 500;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.subject-grade {
+  width: 60px;
+  text-align: right;
+  font-weight: 600;
+}
+
+/* Lessons Grid */
+.lessons-grid, .quizzes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.lesson-card, .quiz-card {
+  padding: 20px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.professor-dashboard.dark .lesson-card,
+.professor-dashboard.dark .quiz-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.professor-dashboard.light .lesson-card,
+.professor-dashboard.light .quiz-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.lesson-card:hover, .quiz-card:hover {
+  transform: translateY(-2px);
+}
+
+.lesson-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.lesson-card h3, .quiz-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.lesson-meta, .quiz-description {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+
+.lesson-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-bottom: 16px;
+}
+
+.lesson-actions, .quiz-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.lesson-actions button, .quiz-actions button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.lesson-actions button.delete, .quiz-actions button.delete {
+  background: #ef4444;
+  color: white;
+}
+
+/* File Stats */
+.file-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.file-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  min-width: 100px;
+  transition: all 0.3s ease;
+}
+
+.professor-dashboard.dark .file-stat-card {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.professor-dashboard.light .file-stat-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-count {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* Files Grid */
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.file-card {
+  display: ruby;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.professor-dashboard.dark .file-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.professor-dashboard.light .file-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+.file-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(100, 108, 255, 0.1);
+}
+
+.file-info {
+  flex: 1;
+}
+
+.file-name {
+  display: block;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.file-size {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.file-date {
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+
+.btn-download {
+  padding: 8px;
+  border-radius: 8px;
+  background: #646cff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-download:hover {
+  transform: scale(1.05);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal {
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.professor-dashboard.dark .modal {
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.professor-dashboard.light .modal {
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  font-size: 1.3rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Form */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border: 1px solid;
+}
+
+.professor-dashboard.dark .form-group input,
+.professor-dashboard.dark .form-group select,
+.professor-dashboard.dark .form-group textarea {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.professor-dashboard.light .form-group input,
+.professor-dashboard.light .form-group select,
+.professor-dashboard.light .form-group textarea {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-submit {
+  padding: 10px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Upload Area */
+.upload-area {
+  text-align: center;
+}
+
+.upload-area input {
+  display: none;
+}
+
+.upload-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 40px;
+  border: 2px dashed #646cff;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-label:hover {
+  background: rgba(100, 108, 255, 0.05);
+}
+
+.file-limit {
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+/* src/pages/ProfessorDashboard.css - Ajouts pour dropdowns */
+
+/* Dropdowns généraux */
+.professor-dashboard select,
+.professor-dashboard .dropdown-select {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-medium);
+  border-radius: 10px;
+  padding: 10px 32px 10px 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 20px;
+}
+
+body.dark-theme .professor-dashboard select,
+body.dark-theme .professor-dashboard .dropdown-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.professor-dashboard select option {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 10px;
+}
+
+/* Search box amélioré */
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  min-width: 250px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-medium);
+}
+
+.search-box input {
+  background: none;
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Filter group amélioré */
+.filter-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.filter-group select {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.filter-group select option {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* View toggle amélioré */
+.view-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: var(--bg-tertiary);
+}
+
+.view-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.view-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.view-btn:hover:not(.active) {
+  background: rgba(100, 108, 255, 0.1);
+  color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .professor-dashboard {
+    padding: 16px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .students-grid,
+  .lessons-grid,
+  .quizzes-grid,
+  .files-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal {
+    padding: 20px;
+  }
+}

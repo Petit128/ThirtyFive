@@ -1,0 +1,79 @@
+
+<style>
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:10px}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:500;margin-right:4px;margin-bottom:4px}
+.ttl{font-size:14px;font-weight:500;color:var(--color-text-primary);margin:0 0 4px}
+.sub{font-size:12px;color:var(--color-text-secondary);margin:0 0 6px}
+.kw{font-size:11px;color:var(--color-text-secondary);margin:4px 0 0}
+.kw b{color:var(--color-text-primary);font-weight:500}
+.col2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+</style>
+<div style="padding:4px 0 10px">
+<div style="font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em">Diagrammes structurels — "comment c'est construit"</div>
+<div class="col2">
+  <div class="card">
+    <span class="tag" style="background:#E6F1FB;color:#0C447C">Classes</span>
+    <p class="ttl">Diagramme de classes</p>
+    <p class="sub">Représente les "modèles" du système : les types d'objets, leurs caractéristiques et leurs relations.</p>
+    <p class="kw"><b>Composants clés :</b> Classe · Attribut · Méthode · Héritage · Association · Multiplicité (1..* etc.)</p>
+    <p class="kw"><b>Mots-clés :</b> extends · implements · <<interface>> · composition · agrégation</p>
+  </div>
+  <div class="card">
+    <span class="tag" style="background:#E6F1FB;color:#0C447C">Objets</span>
+    <p class="ttl">Diagramme d'objets</p>
+    <p class="sub">Photographie d'un instant précis : montre des instances concrètes (objets réels) d'un diagramme de classes.</p>
+    <p class="kw"><b>Composants clés :</b> Objet (instance) · Valeur d'attribut · Lien (instance d'association)</p>
+    <p class="kw"><b>Mots-clés :</b> :NomClasse · snapshot · instanciation</p>
+  </div>
+  <div class="card">
+    <span class="tag" style="background:#E6F1FB;color:#0C447C">Composants</span>
+    <p class="ttl">Diagramme de composants</p>
+    <p class="sub">Montre les grands blocs logiciels du système (modules) et comment ils s'utilisent les uns les autres.</p>
+    <p class="kw"><b>Composants clés :</b> Composant · Interface fournie · Interface requise · Dépendance</p>
+    <p class="kw"><b>Mots-clés :</b> <<component>> · port · connecteur · dépendance</p>
+  </div>
+  <div class="card">
+    <span class="tag" style="background:#E6F1FB;color:#0C447C">Déploiement</span>
+    <p class="ttl">Diagramme de déploiement</p>
+    <p class="sub">Montre où le logiciel s'exécute physiquement : serveurs, machines, réseaux, appareils.</p>
+    <p class="kw"><b>Composants clés :</b> Nœud (serveur/machine) · Artefact (fichier .jar, .exe…) · Lien réseau</p>
+    <p class="kw"><b>Mots-clés :</b> <<device>> · <<environment>> · déploiement · topologie</p>
+  </div>
+</div>
+
+<div style="font-size:13px;font-weight:500;color:var(--color-text-secondary);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.04em">Diagrammes comportementaux — "comment ça se passe"</div>
+<div class="col2">
+  <div class="card">
+    <span class="tag" style="background:#E1F5EE;color:#085041">Activité</span>
+    <p class="ttl">Diagramme d'activité (Flowchart)</p>
+    <p class="sub">Modélise un processus étape par étape. Comme un organigramme, avec la possibilité de faire des tâches en même temps.</p>
+    <p class="kw"><b>Composants clés :</b> Action (rectangle arrondi) · Décision (losange) · Fork (barre de séparation) · Join (barre de fusion) · Début (cercle plein) · Fin (cercle cerclé) · Couloirs (swimlanes)</p>
+    <p class="kw"><b>Mots-clés :</b> flux de contrôle · activités parallèles · condition garde · branche</p>
+  </div>
+  <div class="card">
+    <span class="tag" style="background:#E1F5EE;color:#085041">Séquence</span>
+    <p class="ttl">Diagramme de séquence</p>
+    <p class="sub">Montre les messages échangés entre les objets dans l'ordre chronologique (de haut en bas).</p>
+    <p class="kw"><b>Composants clés :</b> Ligne de vie (lifeline) · Message (flèche) · Barre d'activation · Fragment combiné (loop, alt, opt)</p>
+    <p class="kw"><b>Mots-clés :</b> appel synchrone · réponse · activation · interaction</p>
+  </div>
+  <div class="card">
+    <span class="tag" style="background:#E1F5EE;color:#085041">États</span>
+    <p class="ttl">Diagramme d'états</p>
+    <p class="sub">Décrit le cycle de vie d'un objet : les états qu'il traverse et les événements qui le font changer d'état.</p>
+    <p class="kw"><b>Composants clés :</b> État (rectangle arrondi) · Transition (flèche) · État initial · État final · Événement déclencheur · Garde (condition)</p>
+    <p class="kw"><b>Mots-clés :</b> transition · trigger · état composite · machine à états</p>
+  </div>
+  <div class="card">
+    <span class="tag" style="background:#E1F5EE;color:#085041">Temps</span>
+    <p class="ttl">Diagramme de temps (Timing)</p>
+    <p class="sub">Représente les changements d'état sur un axe temporel. Idéal pour les systèmes industriels ou embarqués.</p>
+    <p class="kw"><b>Composants clés :</b> Axe X (temps) · Ligne de vie (état de l'objet) · Changement d'état (ligne verticale) · Contrainte de durée · Contrainte de temps</p>
+    <p class="kw"><b>Mots-clés :</b> timeline · durée · synchronisation · contrainte temporelle · chronogramme</p>
+  </div>
+</div>
+
+<div style="margin-top:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:12px;color:var(--color-text-secondary)">
+  <b style="color:var(--color-text-primary)">Astuce exposé (5 personnes, 15 min) :</b> Personne 1 → Intro UML + carte des familles · Personne 2 → Diagramme d'activité + Flowchart · Personne 3 → Diagramme de composants · Personne 4 → Diagramme de temps · Personne 5 → Conclusion + démo
+</div>
+</div>
