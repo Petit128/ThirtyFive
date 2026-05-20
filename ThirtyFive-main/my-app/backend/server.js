@@ -9,6 +9,203 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 
+// ==================== STRUCTURES DE DONNÉES AVANCÉES ====================
+
+// 1. TRIE pour recherche rapide (Structure de données avancée)
+class TrieNode {
+  constructor() {
+    this.children = new Map();
+    this.isEnd = false;
+    this.lessonIds = [];
+  }
+}
+
+class TrieSearch {
+  constructor() {
+    this.root = new TrieNode();
+  }
+  
+  insert(word, lessonId) {
+    let node = this.root;
+    for (let char of word.toLowerCase()) {
+      if (!node.children.has(char)) {
+        node.children.set(char, new TrieNode());
+      }
+      node = node.children.get(char);
+      node.lessonIds.push(lessonId);
+    }
+    node.isEnd = true;
+  }
+  
+  searchByPrefix(prefix) {
+    let node = this.root;
+    for (let char of prefix.toLowerCase()) {
+      if (!node.children.has(char)) return [];
+      node = node.children.get(char);
+    }
+    return [...new Set(node.lessonIds)];
+  }
+}
+
+// 2. TAS BINAIRE pour classement (Structure de données avancée)
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+  
+  push(node) {
+    this.heap.push(node);
+    this.bubbleUp(this.heap.length - 1);
+  }
+  
+  bubbleUp(index) {
+    while (index > 0) {
+      const parent = Math.floor((index - 1) / 2);
+      if (this.heap[parent].value <= this.heap[index].value) break;
+      [this.heap[parent], this.heap[index]] = [this.heap[index], this.heap[parent]];
+      index = parent;
+    }
+  }
+  
+  pop() {
+    const min = this.heap[0];
+    const last = this.heap.pop();
+    if (this.heap.length > 0) {
+      this.heap[0] = last;
+      this.sinkDown(0);
+    }
+    return min;
+  }
+  
+  sinkDown(index) {
+    const length = this.heap.length;
+    while (true) {
+      let leftChild = 2 * index + 1;
+      let rightChild = 2 * index + 2;
+      let swap = null;
+      let element = this.heap[index];
+      
+      if (leftChild < length && this.heap[leftChild].value < element.value) swap = leftChild;
+      if (rightChild < length && this.heap[rightChild].value < (swap === null ? element.value : this.heap[leftChild].value)) swap = rightChild;
+      if (swap === null) break;
+      [this.heap[index], this.heap[swap]] = [this.heap[swap], this.heap[index]];
+      index = swap;
+    }
+  }
+  
+  getTopK(k) {
+    const result = [];
+    const temp = [...this.heap];
+    for (let i = 0; i < k && this.heap.length > 0; i++) {
+      result.push(this.pop());
+    }
+    this.heap = temp;
+    return result;
+  }
+}
+
+// 3. GRAPHE pour recommandations (Algorithme avancé - Dijkstra)
+class GraphRecommendation {
+  constructor() {
+    this.adjacencyList = new Map();
+  }
+  
+  buildGraph(lessons) {
+    lessons.forEach(lesson => this.adjacencyList.set(lesson.id, []));
+    lessons.forEach(lesson => {
+      lessons.forEach(otherLesson => {
+        if (lesson.id !== otherLesson.id) {
+          let weight = 0;
+          if (lesson.subject === otherLesson.subject) weight += 3;
+          if (lesson.difficulty === otherLesson.difficulty) weight += 2;
+          if (lesson.class_level === otherLesson.class_level) weight += 1;
+          if (weight > 0) this.adjacencyList.get(lesson.id).push({ node: otherLesson.id, weight });
+        }
+      });
+    });
+  }
+  
+  getRecommendations(startLessonId, limit = 5) {
+    const distances = new Map();
+    const unvisited = new Set();
+    for (let node of this.adjacencyList.keys()) {
+      distances.set(node, Infinity);
+      unvisited.add(node);
+    }
+    distances.set(startLessonId, 0);
+    
+    while (unvisited.size > 0) {
+      let current = null;
+      let minDistance = Infinity;
+      for (let node of unvisited) {
+        if (distances.get(node) < minDistance) {
+          minDistance = distances.get(node);
+          current = node;
+        }
+      }
+      if (current === null) break;
+      unvisited.delete(current);
+      for (let neighbor of this.adjacencyList.get(current) || []) {
+        const alt = distances.get(current) + (100 / neighbor.weight);
+        if (alt < distances.get(neighbor.node)) distances.set(neighbor.node, alt);
+      }
+    }
+    
+    return Array.from(distances.entries())
+      .filter(([id, dist]) => id !== startLessonId && dist !== Infinity)
+      .sort((a, b) => a[1] - b[1])
+      .slice(0, limit)
+      .map(([id]) => parseInt(id));
+  }
+}
+
+// 4. PROGRAMMATION DYNAMIQUE pour planning (Algorithme avancé - Knapsack)
+class StudyPlanner {
+  static greedyKnapsack(lessons, maxMinutes) {
+    const sorted = [...lessons].sort((a, b) => (a.duration || 30) - (b.duration || 30));
+    let totalTime = 0, totalValue = 0, selected = [];
+    for (let lesson of sorted) {
+      const duration = lesson.duration || 30;
+      if (totalTime + duration <= maxMinutes) {
+        totalTime += duration;
+        totalValue += (lesson.rating || 5) * 10;
+        selected.push(lesson.id);
+      }
+    }
+    return { selected, totalTime, totalValue };
+  }
+  
+  static dynamicKnapsack(lessons, maxMinutes, userPriorities = {}) {
+    const n = lessons.length;
+    const dp = Array(n + 1).fill().map(() => Array(maxMinutes + 1).fill(0));
+    for (let i = 1; i <= n; i++) {
+      const lesson = lessons[i - 1];
+      const duration = lesson.duration || 30;
+      let value = (lesson.rating || 5) * 10;
+      if (userPriorities[lesson.subject]) value *= userPriorities[lesson.subject];
+      for (let w = 1; w <= maxMinutes; w++) {
+        if (duration <= w) dp[i][w] = Math.max(dp[i - 1][w], dp[i - 1][w - duration] + value);
+        else dp[i][w] = dp[i - 1][w];
+      }
+    }
+    const selected = [];
+    let w = maxMinutes;
+    for (let i = n; i > 0; i--) {
+      if (dp[i][w] !== dp[i - 1][w]) {
+        selected.push(lessons[i - 1].id);
+        w -= (lessons[i - 1].duration || 30);
+      }
+    }
+    return { selected: selected.reverse(), totalValue: dp[n][maxMinutes], totalTime: maxMinutes - w };
+  }
+  
+  static optimizeStudyPlan(lessons, maxMinutes, userPriorities = {}) {
+    const greedy = this.greedyKnapsack(lessons, maxMinutes);
+    const dynamic = this.dynamicKnapsack(lessons, maxMinutes, userPriorities);
+    return { baseline: greedy, optimized: dynamic, improvement: ((dynamic.totalValue - greedy.totalValue) / greedy.totalValue * 100).toFixed(2) + '%' };
+  }
+}
+
 dotenv.config();
 const app = express();
 
@@ -59,8 +256,10 @@ const upload = multer({
 
 // ==================== MIDDLEWARE ====================
 app.use(cors({ 
-  origin: ['http://localhost:5173', 'http://localhost:3000'], 
-  credentials: true 
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
@@ -68,7 +267,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Logger
 app.use((req, res, next) => {
-  console.log(`📡 ${req.method} ${req.url}`);
+  console.log(`📡 ${req.method} ${req.url} from ${req.headers.origin}`);
   next();
 });
 
@@ -513,24 +712,32 @@ app.get('/api/lessons', async (req, res) => {
   }
 });
 
+// Remplacer la route GET /api/lessons/:id par :
 app.get('/api/lessons/:id', async (req, res) => {
   try {
-    const result = await pool.query(
-      `SELECT l.*, u.name as creator_name, u.avatar as creator_avatar,
-              COALESCE(r.avg_rating, 0) as rating
-       FROM lessons l
-       LEFT JOIN users u ON l.created_by = u.id
-       LEFT JOIN (SELECT lesson_id, AVG(rating) as avg_rating FROM ratings GROUP BY lesson_id) r ON l.id = r.lesson_id
-       WHERE l.id = $1`,
-      [parseInt(req.params.id)]
-    );
+    const result = await pool.query(`
+      SELECT l.*, u.name as creator_name, u.avatar as creator_avatar,
+             COALESCE(r.avg_rating, 0) as rating,
+             (SELECT file_path FROM uploaded_files WHERE lesson_id = l.id AND file_type = 'html' LIMIT 1) as html_file_path
+      FROM lessons l
+      LEFT JOIN users u ON l.created_by = u.id
+      LEFT JOIN (SELECT lesson_id, AVG(rating) as avg_rating FROM ratings GROUP BY lesson_id) r ON l.id = r.lesson_id
+      WHERE l.id = $1 AND (l.is_published = true OR l.created_by = $2 OR $2 IN (SELECT id FROM users WHERE role = 'admin'))
+    `, [parseInt(req.params.id), req.user?.id || 0]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ success: false, message: 'Leçon non trouvée' });
     }
     
+    const lesson = result.rows[0];
+    
+    // Lire le contenu HTML du fichier si nécessaire
+    if (lesson.html_file_path && fs.existsSync(lesson.html_file_path)) {
+      lesson.html_content = fs.readFileSync(lesson.html_file_path, 'utf8');
+    }
+    
     await pool.query('UPDATE lessons SET views = views + 1 WHERE id = $1', [parseInt(req.params.id)]);
-    res.json({ success: true, lesson: result.rows[0] });
+    res.json({ success: true, lesson });
   } catch (error) {
     console.error('Erreur GET lesson:', error);
     res.status(500).json({ success: false, message: 'Erreur serveur' });
@@ -1201,6 +1408,8 @@ app.get('/api/quizzes', protect, async (req, res) => {
   }
 });
 
+// server.js - Remplacer la route GET /api/quizzes/:id par celle-ci
+
 app.get('/api/quizzes/:id', protect, async (req, res) => {
   try {
     const quizId = parseInt(req.params.id);
@@ -1216,23 +1425,62 @@ app.get('/api/quizzes/:id', protect, async (req, res) => {
       return res.status(404).json({ success: false, message: 'Quiz non trouvé' });
     }
     
+    // Récupérer les questions avec les options correctement formatées
     const questionsResult = await pool.query(`
-      SELECT id, question_text, options, points, order_index
+      SELECT 
+        id, 
+        question_text, 
+        question_type, 
+        options, 
+        correct_answer, 
+        points, 
+        order_index,
+        question_file_path, 
+        question_file_name, 
+        question_file_type
       FROM quiz_questions 
       WHERE quiz_id = $1
       ORDER BY order_index ASC
     `, [quizId]);
     
     const quiz = quizResult.rows[0];
-    quiz.questions = questionsResult.rows.map(q => ({
-      ...q,
-      options: q.options || []
-    }));
+    quiz.questions = questionsResult.rows.map(q => {
+      // Parser les options si c'est une chaîne JSON
+      let parsedOptions = q.options;
+      if (typeof q.options === 'string') {
+        try {
+          parsedOptions = JSON.parse(q.options);
+        } catch (e) {
+          parsedOptions = [];
+        }
+      }
+      
+      return {
+        id: q.id,
+        question_text: q.question_text,
+        type: q.question_type || 'multiple_choice',
+        options: parsedOptions || [],
+        correct_answer: q.correct_answer,
+        points: q.points || 1,
+        has_file: !!(q.question_file_path),
+        file_url: q.question_file_path ? `http://localhost:5000${q.question_file_path}` : null,
+        file_name: q.question_file_name,
+        file_type: q.question_file_type
+      };
+    });
+    
+    // Pour les étudiants, ne pas envoyer les réponses correctes
+    if (req.user.role !== 'admin' && req.user.role !== 'professor') {
+      quiz.questions = quiz.questions.map(q => ({
+        ...q,
+        correct_answer: undefined
+      }));
+    }
     
     res.json({ success: true, quiz });
   } catch (error) {
-    console.error('Erreur GET quiz:', error);
-    res.status(500).json({ success: false, message: 'Erreur serveur' });
+    console.error('❌ Erreur GET quiz:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur: ' + error.message });
   }
 });
 
@@ -2019,7 +2267,6 @@ app.get('/api/quizzes/:id/results', protect, async (req, res) => {
 });
 
 // ==================== ROUTES FORUM ====================
-// backend/server.js - Remplacer UNIQUEMENT la route GET /api/forum/categories
 
 // GET /api/forum/categories - Récupérer toutes les catégories (CORRIGÉ)
 app.get('/api/forum/categories', protect, async (req, res) => {
@@ -2672,6 +2919,34 @@ app.get('/api/forum/categories/:id/invite', protect, async (req, res) => {
   }
 });
 
+// DELETE catégorie
+app.delete('/api/forum/categories/:id', protect, async (req, res) => {
+  try {
+    const category = await pool.query('SELECT created_by FROM forum_categories WHERE id = $1', [req.params.id]);
+    if (category.rows[0]?.created_by !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Non autorisé' });
+    }
+    await pool.query('DELETE FROM forum_categories WHERE id = $1', [req.params.id]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Erreur' });
+  }
+});
+
+// DELETE topic
+app.delete('/api/forum/topics/:id', protect, async (req, res) => {
+  try {
+    const topic = await pool.query('SELECT user_id FROM forum_topics WHERE id = $1', [req.params.id]);
+    if (topic.rows[0]?.user_id !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Non autorisé' });
+    }
+    await pool.query('DELETE FROM forum_topics WHERE id = $1', [req.params.id]);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Erreur' });
+  }
+});
+
 // GET /api/forum/my-topics - Mes topics (CORRIGÉ)
 app.get('/api/forum/my-topics', protect, async (req, res) => {
   try {
@@ -2896,7 +3171,80 @@ app.post('/api/forum/join-with-code', protect, async (req, res) => {
 });
 
 // ==================== ROUTES ADMIN ====================
-// GET /api/admin/users - Liste tous les utilisateurs (CORRIGÉ)
+// Dans server.js, ajoutez après les autres routes admin
+
+// GET /api/admin/files - Récupérer tous les fichiers (admin)
+app.get('/api/admin/files', protect, authorize('admin'), async (req, res) => {
+  try {
+    const { file_type, search, page = 1, limit = 50 } = req.query;
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    
+    let query = `
+      SELECT f.*, u.name as uploader_name, u.email as uploader_email
+      FROM uploaded_files f
+      LEFT JOIN users u ON f.user_id = u.id
+      WHERE 1=1
+    `;
+    const values = [];
+    let paramCount = 1;
+    
+    if (file_type && file_type !== 'all') {
+      query += ` AND f.file_type = $${paramCount++}`;
+      values.push(file_type);
+    }
+    if (search) {
+      query += ` AND (f.original_name ILIKE $${paramCount++} OR f.filename ILIKE $${paramCount++})`;
+      values.push(`%${search}%`, `%${search}%`);
+    }
+    
+    query += ` ORDER BY f.created_at DESC LIMIT $${paramCount++} OFFSET $${paramCount++}`;
+    values.push(parseInt(limit), offset);
+    
+    const result = await pool.query(query, values);
+    
+    // Statistiques
+    const stats = await pool.query(`
+      SELECT file_type, COUNT(*) as count, COALESCE(SUM(file_size), 0) as total_size
+      FROM uploaded_files
+      GROUP BY file_type
+    `);
+    
+    res.json({ 
+      success: true, 
+      files: result.rows,
+      stats: stats.rows,
+      total: result.rows.length
+    });
+  } catch (error) {
+    console.error('❌ Erreur GET admin/files:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+// DELETE /api/admin/files/:id - Supprimer un fichier (admin)
+app.delete('/api/admin/files/:id', protect, authorize('admin'), async (req, res) => {
+  try {
+    const fileId = parseInt(req.params.id);
+    
+    const file = await pool.query('SELECT * FROM uploaded_files WHERE id = $1', [fileId]);
+    if (file.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Fichier non trouvé' });
+    }
+    
+    // Supprimer le fichier physique
+    if (fs.existsSync(file.rows[0].file_path)) {
+      fs.unlinkSync(file.rows[0].file_path);
+    }
+    
+    await pool.query('DELETE FROM uploaded_files WHERE id = $1', [fileId]);
+    
+    res.json({ success: true, message: 'Fichier supprimé' });
+  } catch (error) {
+    console.error('❌ Erreur DELETE admin/files:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
 app.get('/api/admin/users', protect, authorize('admin'), async (req, res) => {
   try {
     // Requête simplifiée sans sous-requêtes problématiques
@@ -4523,11 +4871,169 @@ function getMimeType(ext) {
   return mimeTypes[ext] || 'application/octet-stream';
 }
 
+// ==================== ROUTES ALGORITHMIQUES ====================
+
+// Route 1: Recommandations par graphe (Dijkstra)
+app.get('/api/algorithms/recommendations/:lessonId', protect, async (req, res) => {
+  try {
+    const lessons = await pool.query(`SELECT id, title, subject, difficulty, class_level, rating, duration FROM lessons WHERE is_published = true`);
+    const graph = new GraphRecommendation();
+    graph.buildGraph(lessons.rows);
+    const recommendations = graph.getRecommendations(parseInt(req.params.lessonId), 5);
+    const recommendedLessons = await pool.query('SELECT * FROM lessons WHERE id = ANY($1)', [recommendations.length ? recommendations : [0]]);
+    res.json({ success: true, algorithm: "Dijkstra - Recherche du plus court chemin dans graphe de similarité", recommendations: recommendedLessons.rows });
+  } catch (error) {
+    console.error('Erreur recommandations:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+// Route 2: Planning d'étude optimisé (Programmation Dynamique)
+app.get('/api/algorithms/study-plan', protect, async (req, res) => {
+  try {
+    const { maxMinutes = 120 } = req.query;
+    const lessons = await pool.query(`SELECT id, title, subject, rating, duration FROM lessons WHERE is_published = true`);
+    if (lessons.rows.length === 0) {
+      return res.json({ success: true, message: "Aucune leçon disponible", plan: null });
+    }
+    const plan = StudyPlanner.optimizeStudyPlan(lessons.rows, parseInt(maxMinutes));
+    const baselineLessons = await pool.query('SELECT id, title, duration FROM lessons WHERE id = ANY($1)', [plan.baseline.selected.length ? plan.baseline.selected : [0]]);
+    const optimizedLessons = await pool.query('SELECT id, title, duration FROM lessons WHERE id = ANY($1)', [plan.optimized.selected.length ? plan.optimized.selected : [0]]);
+    res.json({ success: true, algorithm: "Programmation dynamique - Problème du sac à dos (0/1 Knapsack)", complexity: "O(n × W)", plan: { baseline: { ...plan.baseline, lessons: baselineLessons.rows }, optimized: { ...plan.optimized, lessons: optimizedLessons.rows }, improvement: plan.improvement } });
+  } catch (error) {
+    console.error('Erreur study plan:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+// Route 3: Comparaison recherche (LIKE vs TRIE) - Optimisation mesurée
+app.get('/api/algorithms/search-comparison', protect, async (req, res) => {
+  try {
+    const { searchTerm = 'math' } = req.query;
+    const lessons = await pool.query('SELECT id, title, description FROM lessons');
+    
+    const baselineStart = Date.now();
+    const baselineResult = await pool.query(`SELECT * FROM lessons WHERE title ILIKE $1 OR description ILIKE $1`, [`%${searchTerm}%`]);
+    const baselineTime = Date.now() - baselineStart;
+    
+    const trie = new TrieSearch();
+    lessons.rows.forEach(lesson => {
+      const words = (lesson.title + ' ' + (lesson.description || '')).split(/\s+/);
+      words.forEach(word => { if (word && word.length > 2) trie.insert(word, lesson.id); });
+    });
+    
+    const optimizedStart = Date.now();
+    const optimizedIds = trie.searchByPrefix(searchTerm);
+    const optimizedTime = Date.now() - optimizedStart;
+    const optimizedLessons = await pool.query('SELECT * FROM lessons WHERE id = ANY($1)', [optimizedIds.length ? optimizedIds : [0]]);
+    
+    res.json({ success: true, algorithm: "Trie (Arbre préfixe) - Recherche textuelle O(m)", baseline: { method: "SQL LIKE", time_ms: baselineTime, results_count: baselineResult.rows.length }, optimized: { method: "Trie", time_ms: optimizedTime, results_count: optimizedLessons.rows.length }, improvement: `${((baselineTime - optimizedTime) / baselineTime * 100).toFixed(2)}% plus rapide` });
+  } catch (error) {
+    console.error('Erreur search comparison:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+// Route 4: Classement étudiants avec Tas binaire
+app.get('/api/algorithms/ranking', protect, async (req, res) => {
+  try {
+    const users = await pool.query(`SELECT u.id, u.name, COALESCE(AVG(g.grade), 0) as score, COUNT(DISTINCT ul.lesson_id) as lessons_completed FROM users u LEFT JOIN grades g ON u.id = g.user_id LEFT JOIN user_lessons ul ON u.id = ul.user_id AND ul.completed_at IS NOT NULL WHERE u.role = 'student' GROUP BY u.id`);
+    const heap = new MinHeap();
+    users.rows.forEach(user => heap.push({ id: user.id, name: user.name, value: user.score, lessons: user.lessons_completed }));
+    const topStudents = heap.getTopK(10);
+    res.json({ success: true, algorithm: "Tas binaire (Min-Heap) - Extraction des meilleurs scores O(k log n)", structure: "Tas binaire avec bubbleUp/sinkDown", top_students: topStudents });
+  } catch (error) {
+    console.error('Erreur ranking:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+// Route 5: Dashboard algorithmique complet
+app.get('/api/algorithms/dashboard', protect, async (req, res) => {
+  try {
+    const lastLesson = await pool.query(`SELECT lesson_id FROM user_lessons WHERE user_id = $1 ORDER BY completed_at DESC LIMIT 1`, [req.user.id]);
+    let recommendations = [];
+    if (lastLesson.rows[0]) {
+      const lessons = await pool.query(`SELECT id, title, subject, difficulty, class_level, rating, duration FROM lessons`);
+      const graph = new GraphRecommendation();
+      graph.buildGraph(lessons.rows);
+      const recIds = graph.getRecommendations(lastLesson.rows[0].lesson_id, 3);
+      if (recIds.length) {
+        const recResult = await pool.query('SELECT id, title, subject, emoji FROM lessons WHERE id = ANY($1)', [recIds]);
+        recommendations = recResult.rows;
+      }
+    }
+    const availableLessons = await pool.query(`SELECT id, title, subject, rating, duration FROM lessons`);
+    const studyPlan = availableLessons.rows.length ? StudyPlanner.optimizeStudyPlan(availableLessons.rows, 120) : null;
+    
+    res.json({ success: true, algorithms_used: ["Dijkstra (Graphes)", "Programmation dynamique (Knapsack)", "Trie (Arbre préfixe)", "Tas binaire (Heap)"], data_structures: ["Graphe (Listes d'adjacence)", "Trie (Arbre préfixe)", "Tas binaire"], recommendations: recommendations, study_plan: studyPlan ? { baseline_value: studyPlan.baseline.totalValue, optimized_value: studyPlan.optimized.totalValue, improvement: studyPlan.improvement, suggested_lessons: studyPlan.optimized.selected.length } : null });
+  } catch (error) {
+    console.error('Erreur dashboard algo:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+// ==================== ROUTES NOTIFICATIONS ====================
+app.get('/api/notifications', protect, async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT * FROM notifications 
+      WHERE user_id = $1 
+      ORDER BY created_at DESC
+      LIMIT 50
+    `, [req.user.id]);
+    res.json({ success: true, notifications: result.rows });
+  } catch (error) {
+    console.error('Erreur GET notifications:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+app.put('/api/notifications/:id/read', protect, async (req, res) => {
+  try {
+    await pool.query(`
+      UPDATE notifications SET is_read = true 
+      WHERE id = $1 AND user_id = $2
+    `, [req.params.id, req.user.id]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erreur mark read:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+app.put('/api/notifications/read-all', protect, async (req, res) => {
+  try {
+    await pool.query(`
+      UPDATE notifications SET is_read = true 
+      WHERE user_id = $1
+    `, [req.user.id]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erreur mark all read:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
+app.delete('/api/notifications/:id', protect, async (req, res) => {
+  try {
+    await pool.query(`
+      DELETE FROM notifications 
+      WHERE id = $1 AND user_id = $2
+    `, [req.params.id, req.user.id]);
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erreur delete notification:', error);
+    res.status(500).json({ success: false, message: 'Erreur serveur' });
+  }
+});
+
 // ==================== DÉMARRAGE ====================
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log('\n' + '='.repeat(60));
   console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+   console.log(`   ➜ Réseau:  http://192.168.10.120:${PORT}`);
   console.log('='.repeat(60));
   console.log('\n📋 Routes disponibles:');
   console.log('   🔐 AUTH: /api/auth/login, /api/auth/register, /api/auth/me');

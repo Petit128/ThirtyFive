@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wave Simulator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #f5f5f5; }
+        .lesson-container { max-width: 1000px; margin: 0 auto; }
+        .lesson-header { margin-bottom: 20px; }
+        h1 { color: #333; }
+        .simulation { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="lesson-container">
+        <div class="lesson-header">
+            <h1>Wave Simulator</h1>
+            <p>Explore wave properties with this interactive simulator</p>
+        </div>
+        <div class="simulation">
+            <div class="wave-sim">
+            <style>
+              .wave-sim { padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; }
+              .wave-container { height: 200px; position: relative; background: rgba(255,255,255,0.1); margin-bottom: 20px; }
+              .wave-dot { position: absolute; width: 10px; height: 10px; background: #ffd93d; border-radius: 50%; }
+              .controls { display: flex; gap: 20px; }
+              input { width: 100%; }
+            </style>
+            <div class="wave-container" id="waveContainer"></div>
+            <div class="controls">
+              <div><label>Amplitude <span id="ampValue">50</span></label><input type="range" id="amp" min="10" max="80" value="50"></div>
+              <div><label>Speed <span id="speedValue">1</span></label><input type="range" id="speed" min="0.5" max="3" value="1"></div>
+            </div>
+            <script>
+              let amp = 50, speed = 1, time = 0;
+              const container = document.getElementById('waveContainer');
+              document.getElementById('amp').oninput = (e) => { amp = e.target.value; document.getElementById('ampValue').textContent = amp; };
+              document.getElementById('speed').oninput = (e) => { speed = e.target.value; document.getElementById('speedValue').textContent = speed; };
+              function animate() {
+                container.innerHTML = '';
+                for(let x = 0; x <= 100; x+=5) {
+                  const y = amp * Math.sin(x/10 - time * speed);
+                  const dot = document.createElement('div');
+                  dot.className = 'wave-dot';
+                  dot.style.left = x + '%';
+                  dot.style.bottom = (50 + y) + '%';
+                  container.appendChild(dot);
+                }
+                time += 0.05;
+                requestAnimationFrame(animate);
+              }
+              animate();
+            </script>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
+    
